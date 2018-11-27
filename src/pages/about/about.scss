@@ -1,0 +1,13 @@
+page-about {
+    ion-card-title {
+        font-weight: bold;
+    }
+
+    .list-md .item-block .item-inner, list-ios .item-block item-inner {
+        border-bottom: 2px solid #ff48d1;
+    }
+
+    .list-ios[inset] .item {
+        border-bottom: 2px solid #488aff;
+    }
+}

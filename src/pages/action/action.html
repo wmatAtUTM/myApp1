@@ -1,0 +1,18 @@
+<ion-header>
+        <ion-navbar>
+          <ion-title>
+            Actions
+          </ion-title>
+        </ion-navbar>
+      </ion-header>
+      
+      <ion-content padding class="action-sheets-basic-page">
+
+        <button ion-button block (click)="openMenu()">Show Action Sheet</button>        
+        <button ion-button color="danger" block (click)="doAlert()">Show Basic Alert</button>
+        <button ion-button color="secondary" block (click)="doPrompt()">Show Prompt Alert</button>
+        <button ion-button color="magenta" block (click)="doConfirm()">Show Confirm Alert</button>
+        <button ion-button color="custom" block light (click)="doRadio()">Show Radio Alert</button>
+        
+      </ion-content>
+      
