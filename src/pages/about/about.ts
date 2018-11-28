@@ -32,6 +32,8 @@ export class AboutPage {
     this.selectedProduct = {};
     this.barcodeScanner.scan().then((barcodeData) => {
       this.selectedProduct = this.products.find(product => product.plu === barcodeData.text);
+      this.scanFlag = true;
+      this.scannedCode = barcodeData.text;
       if (this.selectedProduct !== undefined) {
         this.productFound = true;
       } else {
