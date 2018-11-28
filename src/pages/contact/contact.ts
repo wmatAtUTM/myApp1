@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, ActionSheetController } from 'ionic-angular';
 import { People } from '../../providers/people/people';
 import { DetailsContactPage } from '../details-contact/details-contact';
 
@@ -71,19 +71,20 @@ export class ContactPage {
   }]
   **/
 
-  searchQuery: string = '';
-
-  //public people = this.service.getPeopleFromApi();
   public people = [];
+  public peopleAll = [];
+  public page = 0;
+  public genderType = "";
   public errorMessage : string;
   public reloadData = false;
 
-  constructor(public navCtrl: NavController, public service:People,) {
+  constructor(public navCtrl: NavController, public service:People, public actionSheetCtrl: ActionSheetController) {
     this.service.getPeopleFromApi()
     .subscribe( 
       (response) => { 
         console.log(response); 
         this.people = response["results"]
+        this.peopleAll = this.people
       }, 
       (error) => console.log(error)
     )
@@ -120,33 +121,122 @@ export class ContactPage {
   }
 
   doInfinite(e) {
+    /**
     this.service.getPeopleFromApi()
       .subscribe(
         data => this.people.push(...data["results"]),
         err => console.log(err),
         () => e.complete()
       )
+    */
+    this.service.getPeopleFromApiFilterByGender(this.genderType, this.page)
+      .subscribe (
+        (response) => {
+          console.log(response);
+          this.people = response["results"]
+          this.peopleAll = this.people
+          e.complete()
+          this.page = this.page + 1
+        },
+        (error) => { 
+          console.log(error)
+          e.complete()
+        }
+      )
   }
 
-  getItems(ev: any) {
-    // Reset items back to all of the items
-    //this.initializeItems();
+  searchPeople(e) {
 
     // set val to the value of the searchbar
-    const val = ev.target.value;
+    let val = e.target.value;
+
+    console.log(val);
 
     // if the value is an empty string don't filter the items
     if (val && val.trim() != '') {
-      this.people = this.people.filter((person) => {
-        return (person.name.first.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      this.people = this.peopleAll.filter((person) => {
+        return (person.name.first.toLowerCase().indexOf(val.toLowerCase()) > -1 || 
+          person.name.last.toLowerCase().indexOf(val.toLowerCase()) > -1);
       })
     } else {
-      this.initializeItems();
+      this.service.getPeopleFromApi()
+      .subscribe( 
+        (response) => { 
+          console.log(response); 
+          this.people = response["results"]
+        }, 
+        (error) => console.log(error)
+      )
     }
+
+    console.log(this.people);
   }
 
   pushPerson(person) {
     this.navCtrl.push(DetailsContactPage, person)
+  }
+
+  actionFilter() {
+    const actionSheet = this.actionSheetCtrl.create ({
+      title: 'Filter your contact',
+      buttons: [
+        {
+          text: 'Male',
+          role: 'male',
+          handler: () => { 
+            this.genderType = "male"
+            this.page = 0
+            this.service.getPeopleFromApiFilterByGender(this.genderType, this.page)
+              .subscribe (
+                (response) => {
+                  console.log(response);
+                  this.people = response["results"]
+                  this.peopleAll = this.people
+                  this.page = this.page + 1
+                },
+                (error) => console.log(error)
+              )
+            }
+        }, 
+        {
+          text: 'Female',
+          role: 'female',
+          handler: () => { 
+            this.genderType = "female"
+            this.page = 0
+            this.service.getPeopleFromApiFilterByGender(this.genderType, this.page)
+              .subscribe (
+                (response) => {
+                  console.log(response);
+                  this.people = response["results"]
+                  this.peopleAll = this.people
+                  this.page = this.page + 1
+                },
+                (error) => console.log(error)
+              )
+            }
+        }, 
+        {
+          text: 'No Filter',
+          role: 'no filter',
+          handler: () => { 
+            this.genderType = ""
+            this.page = 0
+            this.service.getPeopleFromApiFilterByGender(this.genderType, this.page)
+              .subscribe (
+                (response) => {
+                  console.log(response);
+                  this.people = response["results"]
+                  this.peopleAll = this.people
+                  this.page = this.page + 1
+                },
+                (error) => console.log(error)
+              )
+            }
+        }
+      ]
+    });
+    actionSheet.present();
   }
 
 }

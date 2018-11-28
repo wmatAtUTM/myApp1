@@ -10,14 +10,21 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class People {
 
-  private apiUrl = "https://randomuser.me/api/?results=20";
+  private apiUrl = "https://randomuser.me/api/?results=30";
+  private apiGender = "";
 
   constructor(public http: HttpClient) {
     console.log('Hello People Provider');
   }
 
   getPeopleFromApi(){
-    return this.http.get(this.apiUrl)
+    return this.http.get(this.apiUrl);
+  }
+
+  getPeopleFromApiFilterByGender(genderType : String, page : number) {
+    this.apiGender = "https://randomuser.me/api/?page=" + page + "&gender=" + genderType + "&results=30";
+    console.log(this.apiGender);
+    return this.http.get(this.apiGender);
   }
 
 }

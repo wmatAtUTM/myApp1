@@ -13,9 +13,13 @@ import { ServicesPage } from '../pages/services/services';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+
 import { People } from '../providers/people/people';
 
 import { HttpClientModule } from '@angular/common/http';
+import { Toast } from '@ionic-native/toast';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { DataServiceProvider } from '../providers/data-service/data-service';
 
 @NgModule({
   declarations: [
@@ -29,8 +33,8 @@ import { HttpClientModule } from '@angular/common/http';
     DetailsContactPage
   ],
   imports: [
-    HttpClientModule,
     BrowserModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp, {
       'tabsLayout': 'icon-left',
       platforms: {
@@ -54,7 +58,10 @@ import { HttpClientModule } from '@angular/common/http';
     StatusBar,
     SplashScreen,
     People,
+    BarcodeScanner,
+    Toast,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    DataServiceProvider,
   ]
 })
 export class AppModule {}
